@@ -1,0 +1,103 @@
+import json
+import os
+
+DATA_FILE = "students.json"
+
+def load_data():
+    if os.path.exists(DATA_FILE):
+        with open(DATA_FILE, 'r') as f:
+            return json.load(f)
+    return {}
+
+def save_data(students):
+    with open(DATA_FILE, 'w') as f:
+        json.dump(students, f, indent=4)
+
+def add_student(students):
+    student_id = input("Enter student ID: ")
+    if student_id in students:
+        print("Student already exists.")
+        return
+    name = input("Enter name: ")
+    age = input("Enter age: ")
+    grade = input("Enter grade: ")
+
+    students[student_id] = {
+        "name": name,
+        "age": age,
+        "grade": grade
+    }
+    print("Student added successfully.")
+
+def view_students(students):
+    if not students:
+        print("No student records found.")
+        return
+    for sid, info in students.items():
+        print(f"ID: {sid}, Name: {info['name']}, Age: {info['age']}, Grade: {info['grade']}")
+
+def search_student(students):
+    student_id = input("Enter student ID to search: ")
+    if student_id in students:
+        info = students[student_id]
+        print(f"ID: {student_id}, Name: {info['name']}, Age: {info['age']}, Grade: {info['grade']}")
+    else:
+        print("Student not found.")
+
+def update_student(students):
+    student_id = input("Enter student ID to update: ")
+    if student_id in students:
+        name = input("Enter new name: ")
+        age = input("Enter new age: ")
+        grade = input("Enter new grade: ")
+
+        students[student_id].update({
+            "name": name,
+            "age": age,
+            "grade": grade
+        })
+        print("Student updated.")
+    else:
+        print("Student not found.")
+
+def delete_student(students):
+    student_id = input("Enter student ID to delete: ")
+    if student_id in students:
+        del students[student_id]
+        print("Student deleted.")
+    else:
+        print("Student not found.")
+
+def main():
+    students = load_data()
+    
+    while True:
+        print("\n--- Student Management System ---")
+        print("1. Add Student")
+        print("2. View All Students")
+        print("3. Search Student")
+        print("4. Update Student")
+        print("5. Delete Student")
+        print("6. Exit")
+        
+        choice = input("Enter your choice (1-6): ")
+
+        if choice == '1':
+            add_student(students)
+        elif choice == '2':
+            view_students(students)
+        elif choice == '3':
+            search_student(students)
+        elif choice == '4':
+            update_student(students)
+        elif choice == '5':
+            delete_student(students)
+        elif choice == '6':
+            save_data(students)
+            print("Data saved. Exiting...")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    main()
